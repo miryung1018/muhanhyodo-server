@@ -14,7 +14,12 @@ include "db.php";
 ////////////////////////////////////////////////////////////////////////////////////
 // 주소록
 getRoute()->get('/address/?(\d+)?', 'apiAddress', EpiApi::external);
-
+/*
+/address
+/address/
+/address/2
+/address/234234324234
+*/
 // 약
 getRoute()->get('/medicine/?(\d+)?', 'apiMedicine', EpiApi::external);
 
@@ -61,7 +66,28 @@ MIRIMMIRIM;
 
 }
 
-function apiAddress(){
+
+function apiAddress($no = 10){
+	getDatabase()->execute('SET NAMES utf8');
+	$rs = getDatabase()->all( 'SELECT * FROM address ');
+	$items = array();
+	for ($i = 0; $i < count($rs); $i++){
+		$r = $rs[0];
+		array_push( $items,
+			array(
+					'id' => $r['id'], 
+					'name' => $r['name'],
+					'tel' => $r['tel'],
+					'address' => $r['address']
+			)
+		);
+	}
+	return $items;
+}
+
+
+/*
+function apiAddress_old(){
 	$items = array();
 	array_push( $items,
 			array(
@@ -89,6 +115,7 @@ function apiAddress(){
 	);
 	return $items;
 }
+*/
 
 function apiMedicine() {
 	$items = array();
